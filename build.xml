@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="TwStreamFlash" basedir="." default="build">
+    <property name="FLEX_HOME" value="/usr/local/flex"/>
+    <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+    <target name="build">
+        <mkdir dir="generated"/>
+        <mxmlc
+          file="src/flash/TwStreamFlash.as"
+          output="generated/TwStreamFlash.swf"
+          static-link-runtime-shared-libraries="true"
+          debug="false">
+          <compiler.library-path dir="lib/flash" append="true">
+            <include name="as3corelib.swc"/>
+          </compiler.library-path>
+          <default-size width="1" height="1"/>
+        </mxmlc>
+        <copy file="src/html/test.html" todir="generated"/>
+        <copy todir="generated">
+          <fileset dir="lib/js"/>
+        </copy>
+    </target>
+
+    <target name="clean">
+      <delete dir="generated"/>
+    </target>
+</project>
