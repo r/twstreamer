@@ -49,6 +49,10 @@ will actually initiate the connect and begin to proxy Tweets. The "hander"
 needs to take a single jQuery parsed JSON object as an argument -- that is the
 actual Tweet.
 
+The host to connect to is optional, but at this time, stream.twitter.com, the
+default Streaming API endpoint, does not serve a crossdomain.xml file. Only
+the betastream.twitter.com does.
+
 +--------------+
 | Contributors |
 +--------------+
