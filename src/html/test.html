@@ -29,7 +29,7 @@
         var streamPassword = $('input[name=stream-password]').val();
         if ((streamPath != "") && (streamUsername != "") && (streamPassword != "")) {
           streamerSelector.flash(function() {
-            this.ConnectToStream("stream.twitter.com", streamPath, streamUsername, streamPassword);
+            this.ConnectToStream("10.195.80.143", streamPath, streamUsername, streamPassword);
           });
           return true;
         }
