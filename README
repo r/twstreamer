@@ -1,0 +1,59 @@
++------------+
+| twStreamer |
++------------+
+
+Because we don't (yet) support Web Sockets on the Twitter Streaming API
+(http://apiwiki.twitter.com/Streaming-API-Documentation), the only method
+available to connect to the Streaming API from Javascript is to rely on a
+Flash intermediary. This library provides a very small SWF (2K when compiled),
+that will connect to the Streaming API and then call back out to JavaScript
+with the JSON status object once it is received.
+
+This library is only, currently, suitable for proof of concept scenarios.
+
++-----------------+
+| Getting Started |
++-----------------+
+
+This library depends on both jQuery 1.4.2 (http://jquery.com/) and jQuery SWF
+Object (http://jquery.thewikies.com/swfobject/). With those, the twstreamer.js
+and TwStreamFlash.swf files in the same directory, and the JS scripts included
+via script tags, it is as simple as
+
+    // set up the connection
+    jQuery.twstreamer
+      .init()
+      .credentials(USERNAME, PASSWORD)
+      .connect(
+        function(tweet) {
+          // receive tweet
+          console.log(tweet);
+        },
+        'track',                  // api method (track, follow, etc.)
+        'twitter',                // api query
+        'betastream.twitter.com'  // the host to connect to (optional)
+      );
+
+    // some time later...
+    jQuery.twstreamer..disconnect();
+
+At this time, the Streaming API still uses basic auth, so the
+
+    credentials(USERNAME, PASSWORD)
+
+call requires basic auth credentials to connect.  Once the credentials have been supplied
+
+    connect(handler, method, query, host)
+
+will actually initiate the connect and begin to proxy Tweets. The "hander"
+needs to take a single jQuery parsed JSON object as an argument -- that is the
+actual Tweet.
+
++--------------+
+| Contributors |
++--------------+
+
+Raffi Krikorian <raffi@twitter.com>
+Russell D'Sa <dsa@twitter.com>
+Premasagar Rose <p@premasagar.com>
+
