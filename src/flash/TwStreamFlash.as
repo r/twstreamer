@@ -62,8 +62,9 @@ package {
       var parts:Array;
       if (!isReading) {
         parts = buffer.split(/\n/);
-        if (parts[0] != "")
-          ExternalInterface.call("streamEvent", encodeStringForTransport(parts[0]));
+        var firstPart:String = parts[0].replace(/[\s\n]*/, "");
+        if (firstPart != "")
+          ExternalInterface.call("streamEvent", encodeStringForTransport(firstPart));
         buffer = parts.slice(1).join("\n");
         isReading = true;
       }
