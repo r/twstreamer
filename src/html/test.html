@@ -46,7 +46,8 @@
 
       var toDisplay = [];
       function streamEvent(json) {
-        toDisplay.unshift(formatJson($.parseJSON(json), 0));
+        data = json.replace(/%22/g, "\"").replace(/%5c/g, "\\").replace(/%26/g, "&").replace(/%25/g, "%");
+        toDisplay.unshift(formatJson($.parseJSON(data), 0));
         if (toDisplay.length > 5) {
           toDisplay.pop();
         }

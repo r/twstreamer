@@ -1,6 +1,4 @@
 package {
-  import com.adobe.serialization.json.JSON;
-  import com.adobe.serialization.json.JSONParseError;
   import flash.display.Sprite;
   import flash.events.IOErrorEvent;
   import flash.events.ProgressEvent;
@@ -17,6 +15,7 @@ package {
     public function TwStreamFlash() {
       ExternalInterface.addCallback("ConnectToStream", function(path:String, username:String, pass:String):void {
         amountRead = 0;
+        streamBuffer = "";
         var request:URLRequest = createStreamRequest(path, username, pass);
         stream = new URLStream();
         stream.addEventListener(IOErrorEvent.IO_ERROR, errorReceived);
@@ -48,21 +47,35 @@ package {
     // parse the incoming data stream -- this will call out to "streamEvent"
     // in javascript with the JSON
     private var amountRead:int = 0;
+    private var isReading:Boolean = false;
+    private var streamBuffer:String = "";
+    private var curlyBraceCount:int = 0;
     private function dataReceived(pe:ProgressEvent):void {
       var toRead:Number = pe.bytesLoaded - amountRead;
       var buffer:String = stream.readUTFBytes(toRead);
       amountRead = pe.bytesLoaded;
 
-      var emptyMatcher:RegExp = /^\s*$/;
-      buffer.split("\n").
-        filter(function(e:String, index:int, array:Array):Boolean {
-          // filter out keep alive newlines and null objects
-          return (e.search(emptyMatcher) == -1);
-        }).
-        forEach(function(e:String, index:int, array:Array):void {
-          // send this off to javascript
-          ExternalInterface.call("streamEvent", e);
+      // attempt to restart the stream
+      if (!isReading) {
+        buffer = buffer.split(/\n/).slice(1).join("\n");
+        isReading = true;
+      }
+
+      // a stupid state machine to count curly braces
+      if ((toRead > 0) && (amountRead > 0)) {
+        streamBuffer += buffer;
+        var parts:Array = streamBuffer.split(/\n/);
+        var lastElement:String = parts.pop();
+        parts.forEach(function(s:String, i:int, a:Array):void {
+          var encodedString:String =
+            s.split("%").join("%25").
+              split("\\").join("%5c").
+              split("\"").join("%22").
+              split("&").join("%26");
+          ExternalInterface.call("streamEvent", encodedString);
         });
+        streamBuffer = lastElement;
+      }
     }
 
     // call out to javascript that there was an error in the stream
