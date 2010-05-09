@@ -59,7 +59,7 @@
                 return this;
             },
 
-            connect: function(handler, method, q){
+            connect: function(handler, host, method, q){
                 var path = this.config.apiPath +
                     '?' + (method || 'track') +
                     '=' + (encodeURIComponent(q) || 'love');
@@ -71,7 +71,7 @@
 
                 if (path && user && pass){
                     streamer.flash(function(){
-                        this.ConnectToStream(path, user, pass);
+                        this.ConnectToStream(host, path, user, pass);
                     });
                     return this;
                 }

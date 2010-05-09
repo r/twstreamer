@@ -13,10 +13,10 @@ package {
     private var stream:URLStream; // the connection to the streaming API
 
     public function TwStreamFlash() {
-      ExternalInterface.addCallback("ConnectToStream", function(path:String, username:String, pass:String):void {
+      ExternalInterface.addCallback("ConnectToStream", function(host:String, path:String, username:String, pass:String):void {
         amountRead = 0;
         streamBuffer = "";
-        var request:URLRequest = createStreamRequest(path, username, pass);
+        var request:URLRequest = createStreamRequest(host, path, username, pass);
         stream = new URLStream();
         stream.addEventListener(IOErrorEvent.IO_ERROR, errorReceived);
         stream.addEventListener(ProgressEvent.PROGRESS, dataReceived);
@@ -29,8 +29,8 @@ package {
       });
     }
 
-    private function createStreamRequest(path:String, username:String, pass:String):URLRequest {
-      var request:URLRequest = new URLRequest("http://betastream.twitter.com" + path);
+    private function createStreamRequest(host:String, path:String, username:String, pass:String):URLRequest {
+      var request:URLRequest = new URLRequest("http://" + host + path);
       request.requestHeaders = new Array(new URLRequestHeader("Authorization", "Basic " + b64encode(username + ":" + pass)));
       request.method = URLRequestMethod.POST;
       request.data = 0;
