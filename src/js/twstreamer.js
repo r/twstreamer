@@ -18,7 +18,8 @@
                     console.log(tweet);
                 },
                 'track',                // api method
-                'love'                  // api query
+                'love',                 // api query
+                'some.domain.com'       // optional alternative host
             );
 
         // some time later...
@@ -59,10 +60,12 @@
                 return this;
             },
 
-            connect: function(handler, host, method, q){
+            connect: function(handler, method, q, host){
                 var path = this.config.apiPath +
                     '?' + (method || 'track') +
                     '=' + (encodeURIComponent(q) || 'love');
+                    
+                host = host || 'stream.twitter.com';
 
                 window[this.config.globalHandler] = function(encodedTweet) {
                   var decodedTweet = encodedTweet.replace(/%22/g, "\"").replace(/%5c/g, "\\").replace(/%26/g, "&").replace(/%25/g, "%");
