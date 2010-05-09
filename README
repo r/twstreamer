@@ -46,7 +46,7 @@ been supplied
 
     connect(handler, method, query, host)
 
-will actually initiate the connect and begin to proxy Tweets. The "hander"
+will actually initiate the connect and begin to proxy Tweets. The "handler"
 needs to take a single jQuery parsed JSON object as an argument -- that is the
 actual Tweet.
 
