@@ -41,7 +41,8 @@ At this time, the Streaming API still uses basic auth, so the
 
     credentials(USERNAME, PASSWORD)
 
-call requires basic auth credentials to connect.  Once the credentials have been supplied
+call requires basic auth credentials to connect. Once the credentials have
+been supplied
 
     connect(handler, method, query, host)
 
