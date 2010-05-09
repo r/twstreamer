@@ -24,12 +24,13 @@
 
       function connectToStream() {
         var streamerSelector = $('#twstreamer');
+        var streamHost = $('input[name=stream-host]').val();
         var streamPath = $('input[name=stream-path]').val();
         var streamUsername = $('input[name=stream-username]').val();
         var streamPassword = $('input[name=stream-password]').val();
         if ((streamPath != "") && (streamUsername != "") && (streamPassword != "")) {
           streamerSelector.flash(function() {
-            this.ConnectToStream("10.195.80.143", streamPath, streamUsername, streamPassword);
+            this.ConnectToStream(streamHost, streamPath, streamUsername, streamPassword);
           });
           return true;
         }
@@ -201,6 +202,10 @@
   <body>
     <h1>JavaScript/Flash bridge to Twitter Streaming API</h1>
     <div id="streaming-configuration">
+      <div class="parameters-input">
+        <span class="label">Stream host</span>
+        <input type="text" name="stream-host" size="30" value="stream.twitter.com"/>
+      </div>
       <div class="parameters-input">
         <span class="label">Stream parameters</span>
         <input type="text" name="stream-path" size="30" value="/1/statuses/filter.json?track=twitter"/>

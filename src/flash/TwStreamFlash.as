@@ -44,35 +44,38 @@ package {
       return encoder.toString();
     }
 
+    private function encodeStringForTransport(s:String):String {
+      return s.split("%").join("%25").split("\\").join("%5c").split("\"").join("%22").split("&").join("%26");
+    }
+
     // parse the incoming data stream -- this will call out to "streamEvent"
     // in javascript with the JSON
     private var amountRead:int = 0;
     private var isReading:Boolean = false;
     private var streamBuffer:String = "";
-    private var curlyBraceCount:int = 0;
     private function dataReceived(pe:ProgressEvent):void {
       var toRead:Number = pe.bytesLoaded - amountRead;
       var buffer:String = stream.readUTFBytes(toRead);
       amountRead = pe.bytesLoaded;
 
       // attempt to restart the stream
+      var parts:Array;
       if (!isReading) {
-        buffer = buffer.split(/\n/).slice(1).join("\n");
+        parts = buffer.split(/\n/);
+        if (parts[0] != "")
+          ExternalInterface.call("streamEvent", encodeStringForTransport(parts[0]));
+        buffer = parts.slice(1).join("\n");
         isReading = true;
       }
 
-      // a stupid state machine to count curly braces
+      // pump the JSON pieces through -- due to actionscript to javascript
+      // encoding issues, we have to wrap them funnily
       if ((toRead > 0) && (amountRead > 0)) {
         streamBuffer += buffer;
-        var parts:Array = streamBuffer.split(/\n/);
+        parts = streamBuffer.split(/\n/);
         var lastElement:String = parts.pop();
         parts.forEach(function(s:String, i:int, a:Array):void {
-          var encodedString:String =
-            s.split("%").join("%25").
-              split("\\").join("%5c").
-              split("\"").join("%22").
-              split("&").join("%26");
-          ExternalInterface.call("streamEvent", encodedString);
+          ExternalInterface.call("streamEvent", encodeStringForTransport(s));
         });
         streamBuffer = lastElement;
       }
