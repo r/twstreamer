@@ -34,14 +34,14 @@ via script tags, it is as simple as
         'betastream.twitter.com'  // the host to connect to (optional)
       );
 
-    // some time later...
-    jQuery.twstreamer..disconnect();
+    // good housekeeping, once the connection can be closed
+    jQuery.twstreamer.disconnect();
 
-At this time, the Streaming API still uses basic auth, so the
+At this time, the Streaming API still uses basic auth, so the call to
 
     credentials(USERNAME, PASSWORD)
 
-call requires basic auth credentials to connect. Once the credentials have
+requires basic auth credentials to connect. Once the credentials have
 been supplied
 
     connect(handler, method, query, host)
