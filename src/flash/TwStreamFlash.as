@@ -30,7 +30,7 @@ package {
     }
 
     private function createStreamRequest(host:String, path:String, username:String, pass:String):URLRequest {
-      var request:URLRequest = new URLRequest("http://" + host + path);
+      var request:URLRequest = new URLRequest("https://" + host + path);
       request.requestHeaders = new Array(new URLRequestHeader("Authorization", "Basic " + b64encode(username + ":" + pass)));
       request.method = URLRequestMethod.POST;
       request.data = 0;
